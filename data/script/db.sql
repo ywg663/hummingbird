@@ -4,201 +4,141 @@
 	date: 2020/10/30
 
 */
-CREATE TABLE `setting` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT comment 'id' ,
-  `serial` varchar(32) comment 'ÒµÎñid',
-  `create_datetime` timestamp default CURRENT_TIMESTAMP not null comment '´´½¨ÈÕÆÚ' ,
-  `update_time` timestamp default CURRENT_TIMESTAMP not null comment '¸üĞÂÈÕÆÚ' ,
-  `status` tinyint unsigned null comment '×´Ì¬',
-  `type` tinyint unsigned null comment 'Àà±ğ',
-  `name` nvarchar(32) null comment 'Ãû³Æ',
-  `value` nvarchar(512) null comment 'Öµ',
+-- ta.account definition
 
+CREATE TABLE `account` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `serial` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ä¸šåŠ¡id',
+  `create_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'åˆ›å»ºæ—¥æœŸ',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'æ›´æ–°æ—¥æœŸ',
+  `status` tinyint unsigned DEFAULT NULL COMMENT 'çŠ¶æ€',
+  `type` tinyint unsigned DEFAULT NULL COMMENT 'ç±»åˆ«',
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'åç§°',
+  `pwd` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'å€¼',
+  `amount` float DEFAULT NULL COMMENT 'é‡‘é¢',
   PRIMARY KEY (`id`),
   KEY `idx_create_datetime` (`create_datetime`),
   KEY `idx_time` (`name`)
-) comment 'ÉèÖÃ' collate=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='å¸å·';
 
--- ÕÊºÅ 
-CREATE TABLE `account` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT comment 'id' ,
-  `serial` varchar(32) comment 'ÒµÎñid',
-  `create_datetime` timestamp default CURRENT_TIMESTAMP not null comment '´´½¨ÈÕÆÚ' ,
-  `update_time` timestamp default CURRENT_TIMESTAMP not null comment '¸üĞÂÈÕÆÚ' ,
-  `status` tinyint unsigned null comment '×´Ì¬',
-  `type` tinyint unsigned null comment 'Àà±ğ',
-  `name` nvarchar(32) null comment 'Ãû³Æ',
-  `pwd` nvarchar(32) null comment 'Öµ',
-  `amount` FLOAT(4) null comment '½ğ¶î',
+-- ta.indicator_day definition
 
-  PRIMARY KEY (`id`),   
-  KEY `idx_create_datetime` (`create_datetime`),
-  KEY `idx_time` (`name`)
-) comment 'ÉèÖÃ' collate=utf8mb4_bin;
+CREATE TABLE `indicator_day` (
+  `security` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è‚¡ç¥¨ä»£ç ',
+  `kday` date NOT NULL COMMENT 'æ—¥æœŸ',
+  `open` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µå¼€å§‹æ—¶ä»·æ ¼',
+  `close` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µç»“æŸæ—¶ä»·æ ¼',
+  `low` decimal(10,2) DEFAULT NULL COMMENT 'æœ€ä½ä»·',
+  `high` decimal(10,2) DEFAULT NULL COMMENT 'æœ€é«˜ä»·',
+  `volume` bigint DEFAULT NULL COMMENT 'æˆäº¤çš„è‚¡ç¥¨æ•°é‡',
+  `money` decimal(20,2) DEFAULT NULL COMMENT 'æˆäº¤çš„é‡‘é¢',
+  `high_limit` decimal(10,2) DEFAULT NULL COMMENT 'æ¶¨åœä»·',
+  `low_limit` decimal(10,2) DEFAULT NULL COMMENT 'è·Œåœä»·',
+  `avg` decimal(10,2) DEFAULT NULL COMMENT 'è¿™æ®µæ—¶é—´çš„å¹³å‡ä»·, ç­‰äºmoney/volume',
+  `ma20` decimal(10,2) DEFAULT NULL COMMENT '20å‡çº¿å€¼',
+  `ma60` decimal(10,2) DEFAULT NULL COMMENT '60å‡çº¿å€¼',
+  `ma120` decimal(10,2) DEFAULT NULL COMMENT '120å‡çº¿',
+  `roc` decimal(10,2) DEFAULT NULL COMMENT 'roc',
+  `sroc` decimal(10,2) DEFAULT NULL COMMENT 'æ¶¨åœä»·',
+  `kd20` decimal(10,2) DEFAULT NULL COMMENT '20æŠµæ‰£close',
+  `kd60` decimal(10,2) DEFAULT NULL COMMENT 'closeä¸ema60å·®æ¯”å€¼',
+  `kd120` decimal(10,2) DEFAULT NULL COMMENT 'closeä¸ema20å·®æ¯”å€¼',
+  `cs` decimal(10,2) DEFAULT NULL COMMENT 'closeä¸ema20å·®æ¯”å€¼',
+  `sm` decimal(10,2) DEFAULT NULL COMMENT 'ema20ä¸ema60å·®æ¯”å€¼',
+  `ml` decimal(10,2) DEFAULT NULL COMMENT 'ema60ä¸ema120å·®æ¯”å€¼',
+  `change_pct` decimal(10,2) DEFAULT NULL COMMENT 'æ¶¨è·Œå¹…',
+  `day_pct` decimal(10,2) DEFAULT NULL COMMENT 'å•æ—¥æŒ¯å¹…',
+  `rel20` decimal(10,2) DEFAULT NULL COMMENT 'ç›¸å¯¹ä¸­è¯800å¼ºåº¦',
+  `update_date` int DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `i_pct20` decimal(10,2) DEFAULT NULL COMMENT 'ä¸­è¯800æ¶¨è·Œ20å‡å€¼',
+  `money20` decimal(20,2) DEFAULT NULL COMMENT '20å¤©æˆäº¤é‡å‡å€¼',
+  `change_pct20` decimal(10,2) DEFAULT NULL COMMENT 'æ¶¨è·Œ20å‡å€¼',
+  `kst` decimal(10,2) DEFAULT NULL COMMENT 'KST',
+  `sig` decimal(10,2) DEFAULT NULL COMMENT 'KST.SIG',
+  `security_type` int DEFAULT '0',
+  PRIMARY KEY (`security`,`kday`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='æŒ‡æ ‡æ—¥çº¿è¡Œæƒ…';
 
+-- ta.industries definition
+
+CREATE TABLE `industries` (
+  `type` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡Œæƒ…åˆ†æ³•ï¼Œç”³ä¸‡ï¼Œè¯ç›‘ä¼šï¼Œèšå®½',
+  `index` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡Œæƒ…ä»£ç ',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡Œæƒ…åç§°',
+  `start_date` date NOT NULL COMMENT 'å¼€å§‹çš„æ—¥æœŸ',
+  `update_date` date DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`index`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='è¡Œä¸šåŸºç¡€æ•°æ®';
+
+-- ta.kline_day definition
+
+CREATE TABLE `kline_day` (
+  `security` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è‚¡ç¥¨ä»£ç ',
+  `kday` date NOT NULL COMMENT 'æ—¥æœŸ',
+  `open` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µå¼€å§‹æ—¶ä»·æ ¼',
+  `close` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µç»“æŸæ—¶ä»·æ ¼',
+  `low` decimal(10,2) DEFAULT NULL COMMENT 'æœ€ä½ä»·',
+  `high` decimal(10,2) DEFAULT NULL COMMENT 'æœ€é«˜ä»·',
+  `volume` bigint DEFAULT NULL COMMENT 'æˆäº¤çš„è‚¡ç¥¨æ•°é‡',
+  `money` decimal(20,2) DEFAULT NULL COMMENT 'æˆäº¤çš„é‡‘é¢',
+  `factor` decimal(15,8) DEFAULT NULL COMMENT 'å‰å¤æƒå› å­, æˆ‘ä»¬æä¾›çš„ä»·æ ¼éƒ½æ˜¯å‰å¤æƒåçš„, ä½†æ˜¯åˆ©ç”¨è¿™ä¸ªå€¼å¯ä»¥ç®—å‡ºåŸå§‹ä»·æ ¼, æ–¹æ³•æ˜¯ä»·æ ¼é™¤ä»¥factor, æ¯”å¦‚: close/factor',
+  `high_limit` decimal(10,2) DEFAULT NULL COMMENT 'æ¶¨åœä»·',
+  `low_limit` decimal(10,2) DEFAULT NULL COMMENT 'è·Œåœä»·',
+  `avg` decimal(10,2) DEFAULT NULL COMMENT 'è¿™æ®µæ—¶é—´çš„å¹³å‡ä»·, ç­‰äºmoney/volume',
+  `pre_close` decimal(10,2) DEFAULT NULL COMMENT 'å‰ä¸€ä¸ªå•ä½æ—¶é—´ç»“æŸæ—¶çš„ä»·æ ¼, æŒ‰å¤©åˆ™æ˜¯å‰ä¸€å¤©çš„æ”¶ç›˜ä»·, æŒ‰åˆ†é’Ÿè¿™æ˜¯å‰ä¸€åˆ†é’Ÿçš„ç»“æŸä»·æ ¼',
+  `paused` tinyint DEFAULT NULL COMMENT 'å¸ƒå°”å€¼, è¿™åªè‚¡ç¥¨æ˜¯å¦åœç‰Œ, åœç‰Œæ—¶open/close/low/high/pre_closeä¾ç„¶æœ‰å€¼,éƒ½ç­‰äºåœç‰Œå‰çš„æ”¶ç›˜ä»·, volume=money=0',
+  `update_date` date DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`security`,`kday`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='æ—¥çº¿è¡Œæƒ…æ•°æ®';
+
+-- ta.securities definition
 
 CREATE TABLE `securities` (
-  `security` VARCHAR(20) NOT NULL COMMENT '¹ÉÆ±´úÂë',
-  `display_name` VARCHAR(20) NULL COMMENT 'ÖĞÎÄÃû³Æ',
-  `name` VARCHAR(50) NULL COMMENT 'ËõĞ´¼ò³Æ',
-  `start_date` DATE NULL COMMENT ' ÉÏÊĞÈÕÆÚ',
-  `end_date` DATE NULL COMMENT 'ÍËÊĞÈÕÆÚ£¬Èç¹ûÃ»ÓĞÍËÊĞÔòÎª2200-01-01',
+  `security` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'è‚¡ç¥¨ä»£ç ',
+  `display_name` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ä¸­æ–‡åç§°',
+  `name` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ç¼©å†™ç®€ç§°',
+  `start_date` date DEFAULT NULL COMMENT 'ä¸Šå¸‚æ—¥æœŸ',
+  `end_date` date DEFAULT NULL COMMENT 'é€€å¸‚æ—¥æœŸï¼Œå¦‚æœæ²¡æœ‰é€€å¸‚åˆ™ä¸º2200-01-01',
+  `type` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ç±»å‹ï¼Œè‚¡ç¥¨ï¼ŒæŒ‡æ•°ï¼ŒåŸºé‡‘\r\nstockï¼Œfund, index futuresï¼Œoptions, etf, ''lof'', ''fja'', ''fjb'', ''open_fund'', ''bond_fund'', ''stock_fund'', ''QDII_fund'', ''money_market_fund',
+  `update_date` date DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`security`)
-  )COMMENT = 'ËùÓĞ¹ÉÆ±ĞÅÏ¢' collate=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='æ‰€æœ‰è‚¡ç¥¨ä¿¡æ¯';
 
--- ÈÕÏßĞĞÇéÊı¾İ£º*STºïÍõ
--- Ë÷Òı ¹ÉÆ±´úÂë£¬ÈÕÆÚ
-CREATE TABLE `kline_day` (
-  `security` VARCHAR(20) NOT NULL COMMENT '¹ÉÆ±´úÂë',
-  `kday` DATE NOT NULL COMMENT 'ÈÕÆÚ',
-  `open` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î¿ªÊ¼Ê±¼Û¸ñ',
-  `close` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î½áÊøÊ±¼Û¸ñ',
-  `low` DECIMAL(10,2) NULL COMMENT '×îµÍ¼Û',
-  `high` DECIMAL(10,2) NULL COMMENT '×î¸ß¼Û',
-  `volume` BIGINT NULL COMMENT '³É½»µÄ¹ÉÆ±ÊıÁ¿',
-  `money` DECIMAL(20,2) NULL COMMENT '³É½»µÄ½ğ¶î',
-  `factor` DECIMAL(15,8) NULL COMMENT 'Ç°¸´È¨Òò×Ó, ÎÒÃÇÌá¹©µÄ¼Û¸ñ¶¼ÊÇÇ°¸´È¨ºóµÄ, µ«ÊÇÀûÓÃÕâ¸öÖµ¿ÉÒÔËã³öÔ­Ê¼¼Û¸ñ, ·½·¨ÊÇ¼Û¸ñ³ıÒÔfactor, ±ÈÈç: close/factor',
-  `high_limit` DECIMAL(10,2) NULL COMMENT 'ÕÇÍ£¼Û',
-  `low_limit` DECIMAL(10,2) NULL COMMENT 'µøÍ£¼Û',
-  `avg` DECIMAL(10,2) NULL COMMENT 'Õâ¶ÎÊ±¼äµÄÆ½¾ù¼Û, µÈÓÚmoney/volume',
-  `pre_close` DECIMAL(10,2) NULL COMMENT 'Ç°Ò»¸öµ¥Î»Ê±¼ä½áÊøÊ±µÄ¼Û¸ñ, °´ÌìÔòÊÇÇ°Ò»ÌìµÄÊÕÅÌ¼Û, °´·ÖÖÓÕâÊÇÇ°Ò»·ÖÖÓµÄ½áÊø¼Û¸ñ',
-  `paused` TINYINT NULL COMMENT '²¼¶ûÖµ, ÕâÖ»¹ÉÆ±ÊÇ·ñÍ£ÅÆ, Í£ÅÆÊ±open/close/low/high/pre_closeÒÀÈ»ÓĞÖµ,¶¼µÈÓÚÍ£ÅÆÇ°µÄÊÕÅÌ¼Û, volume=money=0',
-  PRIMARY KEY (`security`, `kday`)
-  )COMMENT = 'ÈÕÏßĞĞÇéÊı¾İ' collate=utf8mb4_bin;
-  
- -- Ö¸±ê
-CREATE TABLE `indicator_day` (
-  `security` VARCHAR(20) NOT NULL COMMENT '¹ÉÆ±´úÂë',
-  `kday` DATE NOT NULL COMMENT 'ÈÕÆÚ',
-  `open` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î¿ªÊ¼Ê±¼Û¸ñ',
-  `close` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î½áÊøÊ±¼Û¸ñ',
-  `low` DECIMAL(10,2) NULL COMMENT '×îµÍ¼Û',
-  `high` DECIMAL(10,2) NULL COMMENT '×î¸ß¼Û',
-  `volume` BIGINT NULL COMMENT '³É½»µÄ¹ÉÆ±ÊıÁ¿',
-  `money` DECIMAL(20,2) NULL COMMENT '³É½»µÄ½ğ¶î',
-  `high_limit` DECIMAL(10,2) NULL COMMENT 'ÕÇÍ£¼Û',
-  `low_limit` DECIMAL(10,2) NULL COMMENT 'µøÍ£¼Û',
-  `avg` DECIMAL(10,2) NULL COMMENT 'Õâ¶ÎÊ±¼äµÄÆ½¾ù¼Û, µÈÓÚmoney/volume',
-  `ma20` DECIMAL(10,2) NULL COMMENT '20¾ùÏßÖµ',
-  `ma60` DECIMAL(10,2) NULL COMMENT '60¾ùÏßÖµ',
-  `ma120` DECIMAL(10,2) NULL COMMENT '120¾ùÏß',
-  `roc` DECIMAL(10,2) NULL COMMENT 'roc',
-  `sroc` DECIMAL(10,2) NULL COMMENT 'ÕÇÍ£¼Û',
-  `kd20` DECIMAL(10,2) NULL COMMENT '20µÖ¿Ûclose',
-  `kd60` DECIMAL(10,2) NULL COMMENT 'closeÓëema60²î±ÈÖµ',
-  `kd120` DECIMAL(10,2) NULL COMMENT 'closeÓëema20²î±ÈÖµ',
-  `cs` DECIMAL(10,2) NULL COMMENT 'closeÓëema20²î±ÈÖµ',
-  `sm` DECIMAL(10,2) NULL COMMENT 'ema20Óëema60²î±ÈÖµ',
-  `ml` DECIMAL(10,2) NULL COMMENT 'ema60Óëema120²î±ÈÖµ',
-  `change_pct` DECIMAL(10,2) NULL COMMENT 'ÕÇµø·ù',
-  `day_pct` DECIMAL(10,2) NULL COMMENT 'µ¥ÈÕÕñ·ù',
-  `rel20` DECIMAL(10,2) NULL COMMENT 'Ïà¶ÔÖĞÖ¤800Ç¿¶È',
-  PRIMARY KEY (`security`, `kday`)
-  )COMMENT = 'Ö¸±êÈÕÏßĞĞÇé' collate=utf8mb4_bin;
- 
+-- ta.setting definition
 
--- ÉêÍòÒ»¼¶ĞĞÒµÈÕÏßĞĞÇéÊı¾İ
--- Ë÷Òı ¹ÉÆ±´úÂë£¬ÈÕÆÚ
+CREATE TABLE `setting` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `serial` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'ä¸šåŠ¡id',
+  `create_datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'åˆ›å»ºæ—¥æœŸ',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'æ›´æ–°æ—¥æœŸ',
+  `status` tinyint unsigned DEFAULT NULL COMMENT 'çŠ¶æ€',
+  `type` tinyint unsigned DEFAULT NULL COMMENT 'ç±»åˆ«',
+  `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'åç§°',
+  `value` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'å€¼',
+  PRIMARY KEY (`id`),
+  KEY `idx_create_datetime` (`create_datetime`),
+  KEY `idx_time` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='è®¾ç½®';
+
+-- ta.sw1_daily_price definition
+
 CREATE TABLE `sw1_daily_price` (
-  `date` DATE NOT NULL COMMENT 'ÈÕÆÚ',
-  `code` VARCHAR(20) NOT NULL COMMENT 'Ö¸Êı±àÂë',
-  `name` varchar(20) NOT NULL COMMENT 'Ö¸ÊıÃû³Æ',
-  `open` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î¿ªÊ¼Ê±¼Û¸ñ',
-  `close` DECIMAL(10,2) NULL COMMENT 'Ê±¼ä¶Î½áÊøÊ±¼Û¸ñ',
-  `low` DECIMAL(10,2) NULL COMMENT '×îµÍ¼Û',
-  `high` DECIMAL(10,2) NULL COMMENT '×î¸ß¼Û',
-  `volume` BIGINT NULL COMMENT '³É½»µÄ¹ÉÆ±ÊıÁ¿',
-  `money` DECIMAL(20,2) NULL COMMENT '³É½»µÄ½ğ¶î',
-  `change_pct` DECIMAL(10,4) NULL COMMENT 'ÕÇµø·ù',
-  PRIMARY KEY (`code`, `date`)
-  )COMMENT = 'ÉêÍòÒ»¼¶ĞĞÒµÈÕÏßĞĞÇéÊı¾İ' collate=utf8mb4_bin;
- -- truncate table `kline_day` 
- select * from sw1_daily_price where code = '801220' order by `date` desc 
- 
- -- ÊĞÖµÊı¾İ-¹ÉÆ±´úÂëÄ£
- CREATE TABLE `valuation` (
-  `code` VARCHAR(20) NOT NULL COMMENT '¹ÉÆ±´úÂë  ´øºó×º.XSHE/.XSHG',
-  `day` DATE NOT NULL COMMENT 'È¡Êı¾İµÄÈÕÆÚ',
-  `capitalization` DECIMAL(20,4) NULL COMMENT '×Ü¹É±¾(Íò¹É)     ¹«Ë¾ÒÑ·¢ĞĞµÄÆÕÍ¨¹É¹É·İ×ÜÊı(°üº¬A¹É£¬B¹ÉºÍH¹ÉµÄ×Ü¹É±¾)',
-  `circulating_cap` DECIMAL(20,4) NULL COMMENT 'Á÷Í¨¹É±¾(Íò¹É)     ¹«Ë¾ÒÑ·¢ĞĞµÄ¾³ÄÚÉÏÊĞÁ÷Í¨¡¢ÒÔÈËÃñ±Ò¶Ò»»µÄ¹É·İ×ÜÊı(A¹ÉÊĞ³¡µÄÁ÷Í¨¹É±¾)',
-  `market_cap` DECIMAL(20,10) NULL COMMENT '×ÜÊĞÖµ(ÒÚÔª)     A¹ÉÊÕÅÌ¼Û*ÒÑ·¢ĞĞ¹ÉÆ±×Ü¹É±¾£¨A¹É+B¹É+H¹É£©',
-  `circulating_market_cap` DECIMAL(20,10) NULL COMMENT 'Á÷Í¨ÊĞÖµ(ÒÚÔª)     Á÷Í¨ÊĞÖµÖ¸ÔÚÄ³ÌØ¶¨Ê±¼äÄÚµ±Ê±¿É½»Ò×µÄÁ÷Í¨¹É¹ÉÊı³ËÒÔµ±Ê±¹É¼ÛµÃ³öµÄÁ÷Í¨¹ÉÆ±×Ü¼ÛÖµ¡£     A¹ÉÊĞ³¡µÄÊÕÅÌ¼Û*A¹ÉÊĞ³¡µÄÁ÷Í¨¹ÉÊı',
-  `turnover_ratio` DECIMAL(10,4) NULL COMMENT '»»ÊÖÂÊ(%)     Ö¸ÔÚÒ»¶¨Ê±¼äÄÚÊĞ³¡ÖĞ¹ÉÆ±×ªÊÖÂòÂôµÄÆµÂÊ£¬ÊÇ·´Ó³¹ÉÆ±Á÷Í¨ĞÔÇ¿ÈõµÄÖ¸±êÖ®Ò»¡£     »»ÊÖÂÊ=[Ö¸¶¨½»Ò×ÈÕ³É½»Á¿(ÊÖ)100/½ØÖÁ¸ÃÈÕ¹ÉÆ±µÄ×ÔÓÉÁ÷Í¨¹É±¾(¹É)]100%',
-  `pe_ratio` DECIMAL(15,4) NULL COMMENT 'ÊĞÓ¯ÂÊ(PE, TTM)     Ã¿¹ÉÊĞ¼ÛÎªÃ¿¹ÉÊÕÒæµÄ±¶Êı£¬·´Ó³Í¶×ÊÈË¶ÔÃ¿Ôª¾»ÀûÈóËùÔ¸Ö§¸¶µÄ¼Û¸ñ£¬ÓÃÀ´¹À¼Æ¹ÉÆ±µÄÍ¶×Ê±¨³êºÍ·çÏÕ     ÊĞÓ¯ÂÊ£¨PE£¬TTM£©=£¨¹ÉÆ±ÔÚÖ¸¶¨½»Ò×ÈÕÆÚµÄÊÕÅÌ¼Û * µ±ÈÕÈËÃñ±ÒÍâ»ã¹ÒÅÆ¼Û * ½ØÖ¹µ±ÈÕ¹«Ë¾×Ü¹É±¾£©/¹éÊôÓÚÄ¸¹«Ë¾¹É¶«µÄ¾»ÀûÈóTTM¡£',
-  `pe_ratio_lyr` DECIMAL(15,4) NULL COMMENT 'ÒÔÉÏÒ»Äê¶ÈÃ¿¹ÉÓ¯Àû¼ÆËãµÄ¾²Ì¬ÊĞÓ¯ÂÊ. ¹É¼Û/×î½üÄê¶È±¨¸æEPS     ÊĞÓ¯ÂÊ£¨PE£©=£¨¹ÉÆ±ÔÚÖ¸¶¨½»Ò×ÈÕÆÚµÄÊÕÅÌ¼Û * µ±ÈÕÈËÃñ±ÒÍâ»ãÅÆ¼Û * ½ØÖÁµ±ÈÕ¹«Ë¾×Ü¹É±¾£©/¹éÊôÄ¸¹«Ë¾¹É¶«µÄ¾»ÀûÈó¡£',
-  `pb_ratio` DECIMAL(15,4) NULL COMMENT 'ÊĞ¾»ÂÊ(PB)     Ã¿¹É¹É¼ÛÓëÃ¿¹É¾»×Ê²úµÄ±ÈÂÊ     ÊĞ¾»ÂÊ=£¨¹ÉÆ±ÔÚÖ¸¶¨½»Ò×ÈÕÆÚµÄÊÕÅÌ¼Û * µ±ÈÕÈËÃñ±ÒÍâ»ãÅÆ¼Û * ½ØÖÁµ±ÈÕ¹«Ë¾×Ü¹É±¾£©/¹éÊôÄ¸¹«Ë¾¹É¶«µÄÈ¨Òæ¡£',
-  `ps_ratio` DECIMAL(15,4) NULL COMMENT 'ÊĞÏúÂÊ(PS, TTM)     ÊĞÏúÂÊÎª¹ÉÆ±¼Û¸ñÓëÃ¿¹ÉÏúÊÛÊÕÈëÖ®±È£¬ÊĞÏúÂÊÔ½Ğ¡£¬Í¨³£±»ÈÏÎªÍ¶×Ê¼ÛÖµÔ½¸ß¡£     ÊĞÏúÂÊTTM=£¨¹ÉÆ±ÔÚÖ¸¶¨½»Ò×ÈÕÆÚµÄÊÕÅÌ¼Û * µ±ÈÕÈËÃñ±ÒÍâ»ãÅÆ¼Û * ½ØÖÁµ±ÈÕ¹«Ë¾×Ü¹É±¾£©/ÓªÒµ×ÜÊÕÈëTTM',
-  `pcf_ratio` DECIMAL(15,4) NULL COMMENT 'ÊĞÏÖÂÊ(PCF, ÏÖ½ğ¾»Á÷Á¿TTM)     Ã¿¹ÉÊĞ¼ÛÎªÃ¿¹ÉÏÖ½ğ¾»Á÷Á¿µÄ±¶Êı     ÊĞÏÖÂÊ=£¨¹ÉÆ±ÔÚÖ¸¶¨½»Ò×ÈÕÆÚµÄÊÕÅÌ¼Û * µ±ÈÕÈËÃñ±ÒÍâ»ãÅÆ¼Û * ½ØÖÁµ±ÈÕ¹«Ë¾×Ü¹É±¾£©/ÏÖ½ğ¼°ÏÖ½ğµÈ¼ÛÎï¾»Ôö¼Ó¶îTTM',
-  PRIMARY KEY (`code`, `day`)
-  )COMMENT = 'ÊĞÖµÊı¾İ' collate=utf8mb4_bin;
-  
-  -- ĞĞÒµĞÅÏ¢
-  /**
-   * type
-	"sw_l1": ÉêÍòÒ»¼¶ĞĞÒµ
-	"sw_l2": ÉêÍò¶ş¼¶ĞĞÒµ
-	"sw_l3": ÉêÍòÈı¼¶ĞĞÒµ
-	"jq_l1": ¾Û¿íÒ»¼¶ĞĞÒµ
-	"jq_l2": ¾Û¿í¶ş¼¶ĞĞÒµ
-	"zjw": Ö¤¼à»áĞĞÒµ
-  **/
- CREATE TABLE `industries` (
-  `type` VARCHAR(20) not null COMMENT 'ĞĞÇé·Ö·¨£¬ÉêÍò£¬Ö¤¼à»á£¬¾Û¿í',
-  `index` VARCHAR(20) NOT NULL COMMENT 'ĞĞÇé´úÂë',
-  `name`  VARCHAR(20) NOT NULL COMMENT 'ĞĞÇéÃû³Æ',
-  `start` DATE NOT NULL COMMENT '¿ªÊ¼µÄÈÕÆÚ',
-  PRIMARY KEY (`index`, `type`)
-  )COMMENT = 'ĞĞÒµ»ù´¡Êı¾İ' collate=utf8mb4_bin;
-  
- select * from industries i2 where i2.`type` = 'sw_l1'
- select id.* from indicator_day id limit 0,10 left join securities s2 on id.`security` = s2.`security` where id.`security` = '000906.XSHG' order by id.kday 
-	where id.sroc between -1 and 1 and id.ma20 > id.ma60 and id.ma60 > id.ma120 
-	order by id.sroc desc limit 0,20
- select distinct id.`security` from indicator_day id where id.ml > 0 and id.ml < 4 and abs(id.cs) < 5 and abs(id.sm) <5
-	order by id.sroc desc limit 0,20
-select distinct security_type from indicator_day id limit 0,10 
-select count(*) from indicator_day id2 where id2.rel20 is null 
-delete from indicator_day where rel20 is null
-ALTER TABLE securities add dc_code varchar(16) null comment '¶«²Æ´úÂë'
- alter table indicator_day add change_pct20  DECIMAL(10,2) null COMMENT 'ÕÇµø20¾ùÖµ';
- alter table indicator_day add i_pct20  DECIMAL(10,2) null COMMENT 'ÖĞÖ¤800ÕÇµø20¾ùÖµ';
- alter table indicator_day add money20  DECIMAL(10,2) null COMMENT '20Ìì³É½»Á¿¾ùÖµ';
-SELECT * FROM ta.kline_day where security = '000906.XSHG' order by kday desc limit 1
-SELECT * FROM ta.kline_day where paused  = 1 and `security`= '515620.XSHG' order by kday desc 
-select * from setting s2 
-update setting set value = '["300737.XSHE","601888.XSHG","300003.XSHE","600989.XSHG","600873.XSHG","603501.XSHG","603916.XSHG","600436.XSHG","000157.XSHE"]' where id = 4
-INSERT INTO ta.setting
-(serial, create_datetime, update_time, status, `type`, name, value)
-VALUES('', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, 'holds', '["300737.XSHE","601888.XSHG","300003.XSHE","600989.XSHG","600873.XSHG","603501.XSHG","603916.XSHG","600436.XSHG","000157.XSHE"]');
-
--- delete from kline_day where `security` = ''
--- delete from indicator_day where `security` = ''
-select COUNT(*) from securities where type ='stock' and status = 1 and end_date < NOW()  `security` = '000768.XSHE'
-delete from securities where update_date > '2021-04-03'
-update securities set status = 1 where end_date > NOW()  and type = 'etf'
-select * from indicator_day where `security` = '000799.XSHE' order by kday desc limit 0,10
--- 1904797550.67
- select count(*) from securities s where s.status = 1 and `type` = 'stock'
- 
- select * from securities s3 order by update_date desc limit 0,10
- select * FROM securities s3 where s3.`security` = '300573.XSHE'
-  select count(*) from securities s 
- 	where s.end_date < now() or locate('ST',s.display_name) or timestampdiff(year,s.start_date,now()) < 1 and s.type='stock' and s.status = 1
-update securities set status = 0 where (end_date < now() or locate('ST',display_name) or timestampdiff(year,start_date,now()) < 1) and type='stock' and status = 1
-select * from securities s where s.`type` = 'etf'
-  where (s.end_date < now() or locate('ST',s.display_name) or timestampdiff(year,s.start_date,now()) < 1) and s.type='stock' and s.status = 1
- select count(*) from securities s2 where s2.status  = 1 and s2.type = 'index'
- update securities set status = 0 where start_date > '2021-04-13'
- 
- select * from setting s3 
- select * from kline_day kd4 where kd4.`security` = '300725.XSHE'
- select count(*) from securities s8 where s8.status = 1
- delete from kline_day kd3 where kd3.`close` is null or kd3.`security` in (select security from securities s7 where s7.start_date > '2020-9-16')
- select * from indicator_day id2 where id2.`security` = '300725.XSHE'
- select * from kline_day kd left join securities s6 on kd.`security` = s6.`security` where s6.status = 1 and s6.`type` = 'etf'
-select k.*  from kline_day k left join securities s3 on  k.`security` = s3.`security` where s3.type = 'etf' order by kday desc limit 0,10
-delete from  kline_day where `security` in (select `security` from securities s5 where s5.status = 0 and type = 'stock')
-select * from  indicator_day order by kday desc limit 0,10 where `security`  in (select `security` from securities s5 where s5.status = 0 and type = 'stock')
-select * from sw1_daily_price sdp order by sdp.`date` desc limit 0,10
-select count(s2.display_name) from securities s2 where not (s2.end_date < now() or locate('ST',s2.display_name)) and timestampdiff(year,s2.start_date,now()) > 1 order by s2.start_date desc limit 0,100
-
+  `date` date NOT NULL COMMENT 'æ—¥æœŸ',
+  `code` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'æŒ‡æ•°ç¼–ç ',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'æŒ‡æ•°åç§°',
+  `open` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µå¼€å§‹æ—¶ä»·æ ¼',
+  `close` decimal(10,2) DEFAULT NULL COMMENT 'æ—¶é—´æ®µç»“æŸæ—¶ä»·æ ¼',
+  `low` decimal(10,2) DEFAULT NULL COMMENT 'æœ€ä½ä»·',
+  `high` decimal(10,2) DEFAULT NULL COMMENT 'æœ€é«˜ä»·',
+  `volume` bigint DEFAULT NULL COMMENT 'æˆäº¤çš„è‚¡ç¥¨æ•°é‡',
+  `money` decimal(20,2) DEFAULT NULL COMMENT 'æˆäº¤çš„é‡‘é¢',
+  `change_pct` decimal(10,4) DEFAULT NULL COMMENT 'æ¶¨è·Œå¹…',
+  `id` int NOT NULL,
+  `update_date` date DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`code`,`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='ç”³ä¸‡ä¸€çº§è¡Œä¸šæ—¥çº¿è¡Œæƒ…æ•°æ®';
